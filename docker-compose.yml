@@ -1,0 +1,20 @@
+# Streamlit app + Cloudflare Tunnel. Needs GEMINI_API_KEY and CLOUDFLARE_TUNNEL_TOKEN in .env.
+#   docker compose up -d --build
+# For a quick throwaway URL without a Cloudflare account, use `docker compose up app`
+# and run `cloudflared tunnel --url http://localhost:8501` instead (see deploy/cloudflare/README.md).
+services:
+  app:
+    build: .
+    env_file: .env
+    ports:
+      - "8501:8501"
+    restart: unless-stopped
+
+  tunnel:
+    image: cloudflare/cloudflared:latest
+    command: tunnel --no-autoupdate run
+    environment:
+      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
+    depends_on:
+      - app
+    restart: unless-stopped

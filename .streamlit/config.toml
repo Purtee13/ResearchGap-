@@ -1,0 +1,12 @@
+[server]
+headless = true
+maxUploadSize = 50
+# Cloudflare Tunnel / Containers proxy the app, so the browser origin differs from the container's.
+enableXsrfProtection = false
+enableCORS = false
+
+[browser]
+gatherUsageStats = false
+
+[theme]
+primaryColor = "#2f6fdf"

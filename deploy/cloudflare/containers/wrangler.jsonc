@@ -1,0 +1,23 @@
+// Option B: run the Streamlit container on Cloudflare Containers (needs the Workers Paid plan).
+// Deploy from this folder:  npx wrangler secret put GEMINI_API_KEY  &&  npx wrangler deploy
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "researchgap",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-09-01",
+  "containers": [
+    {
+      "class_name": "ResearchGapApp",
+      "image": "../../../Dockerfile",
+      "image_build_context": "../../..",
+      "instance_type": "basic",
+      "max_instances": 2
+    }
+  ],
+  "durable_objects": {
+    "bindings": [{ "class_name": "ResearchGapApp", "name": "RESEARCHGAP" }]
+  },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["ResearchGapApp"] }],
+  "vars": { "GEMMA_MODEL": "gemma-4-31b-it" },
+  "observability": { "enabled": true }
+}

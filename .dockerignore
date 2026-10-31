@@ -1,0 +1,10 @@
+.env
+.env.*
+.venv
+venv
+.git
+__pycache__
+.pytest_cache
+node_modules
+.wrangler
+deploy/cloudflare/containers/node_modules

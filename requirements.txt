@@ -1,0 +1,8 @@
+streamlit>=1.40
+pymupdf>=1.24
+google-genai>=1.20
+pydantic>=2.7
+python-dotenv>=1.0
+pandas>=2.2
+plotly>=5.22
+matplotlib>=3.8

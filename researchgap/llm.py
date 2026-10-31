@@ -68,17 +68,21 @@ class GemmaClient:
         for attempt in range(5):
             try:
                 self.calls += 1
+                started = time.monotonic()
                 resp = self.client.models.generate_content(
                     model=self.settings.model,
                     contents=[types.Content(role="user", parts=parts)],
                     config=config,
                 )
+                print(f"[researchgap] {self.settings.model} call took {time.monotonic() - started:.0f}s "
+                      f"({len(images)} image(s))", flush=True)
                 return resp.text or ""
             except Exception as exc:  # rate limits and transient server errors
                 msg = str(exc)
                 retryable = any(code in msg for code in ("429", "500", "503", "RESOURCE_EXHAUSTED", "UNAVAILABLE"))
                 if not retryable or attempt == 4:
                     raise LLMError(f"Gemini API call failed: {msg}") from exc
+                print(f"[researchgap] retrying in {delay:.0f}s after: {msg[:200]}", flush=True)
                 time.sleep(delay)
                 delay *= 2
         raise LLMError("unreachable")

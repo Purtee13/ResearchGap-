@@ -27,6 +27,17 @@ def test_quote_lookup(papers):
     assert not quote_in_page(papers[2].pdf_bytes, 9, "Accuracy remains high")
 
 
+def test_wrong_page_citation_is_corrected(papers):
+    from researchgap.pipeline import check_evidence
+    from researchgap.schemas import EvidenceRef, ResearchGap
+
+    # the definition is on page 1, but the agent cites page 2
+    ref = EvidenceRef(paper_id="A", page=2, quote_or_observation="percentage of seeded defects that a reviewer correctly identified")
+    gap = ResearchGap(id="G1", title="t", question="q", rationale="r", suggested_experiment="e", evidence=[ref])
+    [check] = check_evidence(gap, {p.paper_id: p for p in papers})
+    assert check.status == "found" and ref.page == 1
+
+
 def test_extract_json():
     assert extract_json('Sure!\n```json\n{"a": 1}\n```') == '{"a": 1}'
     assert extract_json('prefix {"a": {"b": 2}} suffix') == '{"a": {"b": 2}}'
